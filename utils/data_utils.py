@@ -14,13 +14,13 @@ def loading_scene_list(args):
     scenes = []
 
     for i in range(4):
-        if args.phase == 'train':            #如果是训练集取，4组场景的前20个
+        if args.phase == 'train':            
             for j in range(20): 
                 if i == 0:
                     scenes.append("FloorPlan" + str(j + 1))
                 else:
-                    scenes.append("FloorPlan" + str(i + 1) + '%02d' % (j + 1))   #02d表示最小宽度为2的整数 ，左侧填0
-        elif args.phase == 'eval':           #如果是测试集取，4组场景的后10个
+                    scenes.append("FloorPlan" + str(i + 1) + '%02d' % (j + 1))   
+        elif args.phase == 'eval':           
             eval_scenes_list = []
             for j in range(10):
                 if i == 0:

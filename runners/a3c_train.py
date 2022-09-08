@@ -25,11 +25,11 @@ from .train_util import (
 
 
 def a3c_train(
-        rank,   #线程works数
+        rank,  
         args,
-        create_shared_model,   #create_shared_model= 从这三个中选择一个'BaseModel', 'HOZ', 'MetaMemoryHOZ'
+        create_shared_model,  
         shared_model,
-        initialize_agent,     #就是NavigationAgent
+        initialize_agent,     
         optimizer,
         res_queue,
         end_flag,
@@ -40,7 +40,7 @@ def a3c_train(
     targets = AI2THOR_TARGET_CLASSES[args.num_category]
 
     random.seed(args.seed + rank)
-    gpu_id = args.gpu_ids[rank % len(args.gpu_ids)]   #将多线程平均分配给不同的gpu
+    gpu_id = args.gpu_ids[rank % len(args.gpu_ids)]   
 
     torch.cuda.set_device(gpu_id)
     torch.manual_seed(args.seed + rank)

@@ -19,12 +19,12 @@ from ai2thor.controller import Controller, distance
 from .base_controller import BaseController
 
 
-class ThorAgentState:    #agent所处的状态 位置和视野角度
+class ThorAgentState:    
     """ Representation of a simple state of a Thor Agent which includes
         the position, horizon and rotation. """
 
     def __init__(self, x, y, z, rotation, horizon):
-        self.x = round(x, 2)      #round(x, 2)表示四舍五入保留两位小数
+        self.x = round(x, 2)      
         self.y = y
         self.z = round(z, 2)
         self.rotation = round(rotation)
@@ -501,7 +501,7 @@ class ExhaustiveBFSController(Controller):
             print(self.scene_name, str(search_state))
 
 
-class OfflineControllerWithSmallRotationEvent:     #控制机器人运动的简化版本
+class OfflineControllerWithSmallRotationEvent:     
     """ A stripped down version of an event. Only contains lastActionSuccess, sceneName,
         and optionally state and frame. Does not contain the rest of the metadata. """
 
@@ -522,7 +522,7 @@ class OfflineControllerWithSmallRotationEvent:     #控制机器人运动的简�
         self.frame = frame
 
 
-class OfflineControllerWithSmallRotation(BaseController):  #非交互的机器人控制器（常规控制器的简化版本）
+class OfflineControllerWithSmallRotation(BaseController):  
     """ A stripped down version of the controller for non-interactive settings.
         Only allows for a few given actions. Note that you must use the
         ExhaustiveBFSController to first generate the data used by OfflineControllerWithSmallRotation.
@@ -547,7 +547,7 @@ class OfflineControllerWithSmallRotation(BaseController):  #非交互的机器�
             images_file_name='resnet18_featuremap.hdf5',
             depth_file_name='depth.hdf5',
             debug_mode=True,
-            actions=['MoveAhead', 'RotateLeft', 'RotateRight', 'LookUp', 'LookDown'], #只有这五种动作
+            actions=['MoveAhead', 'RotateLeft', 'RotateRight', 'LookUp', 'LookDown'], 
             visualize=True,
             local_executable_path=None,
             optimal_action_file_name=None,
@@ -575,9 +575,9 @@ class OfflineControllerWithSmallRotation(BaseController):  #非交互的机器�
         self.using_raw_metadata = True
         self.actions = actions
         # Allowed rotations.
-        self.rotations = [0, 45, 90, 135, 180, 225, 270, 315]   #每一次的旋转是45°
+        self.rotations = [0, 45, 90, 135, 180, 225, 270, 315]   
         # Allowed horizons.
-        self.horizons = [0, 30]               #俯仰角只有0°和30°
+        self.horizons = [0, 30]               
         self.debug_mode = debug_mode
         self.fov = fov
 
@@ -601,27 +601,27 @@ class OfflineControllerWithSmallRotation(BaseController):  #非交互的机器�
         self.nx = importlib.import_module("networkx")
         self.json_graph_loader = importlib.import_module("networkx.readwrite")
 
-    def start(self):              #开启机器人
+    def start(self):              
         if self.visualize:
-            self.controller.start()     #start()方法在ai2thor库中定义
+            self.controller.start()     
             self.controller.step(
                 dict(action="Initialize", gridSize=self.grid_size, fieldOfView=self.fov)
             )
 
-    def get_full_state(self, x, y, z, rotation=0.0, horizon=0.0):    #对状态变量取两位小数
+    def get_full_state(self, x, y, z, rotation=0.0, horizon=0.0):    
         return ThorAgentState(x, y, z, rotation, horizon)
 
-    def get_state_from_str(self, x, z, rotation=0.0, horizon=0.0):   #对当前状态变量取两位小数
+    def get_state_from_str(self, x, z, rotation=0.0, horizon=0.0):   
         return ThorAgentState(x, self.y, z, rotation, horizon)
 
-    def reset(self, scene_name=None):             #加载新的场景
+    def reset(self, scene_name=None):             
 
         if scene_name is None:
             scene_name = 'FloorPlan28'
 
         if scene_name != self.scene_name:
             self.scene_name = scene_name
-            with open(                                #将grid文件打开  grid文件包含了（x,z)平面坐标  y相机高度
+            with open(                                
                     os.path.join(
                         self.offline_data_dir, self.scene_name, self.grid_file_name  
                     ),
@@ -672,7 +672,7 @@ class OfflineControllerWithSmallRotation(BaseController):  #非交互的机器�
             #     'r',
             # )
 
-            if self.detection_feature is not None:                     #将这个场景中的检测到的物体文件打开
+            if self.detection_feature is not None:                   
                 self.detection_feature.close()
             self.detection_feature = self.h5py.File(
                 os.path.join(

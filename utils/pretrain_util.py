@@ -1,3 +1,4 @@
+""" Borrowed from https://github.com/xiaobaishu0097/ICLR_VTNet/blob/main/utils/pretrain_util.py."""
 import os
 import json
 import numpy as np
@@ -9,12 +10,12 @@ from datasets.constants import AI2THOR_TARGET_CLASSES
 
 class PreVisTranfsDataset(Dataset):
     def __init__(self, args, data_type='train'):
-        self.data_dir = args.data_dir              #ground truth文件夹
+        self.data_dir = args.data_dir             
         self.detection_alg = args.detection_alg
 
         self.targets_index = [i for i, item in enumerate(AI2THOR_TARGET_CLASSES[60]) if item in AI2THOR_TARGET_CLASSES[22]]
-        #为什么要用60类别物体的下标？
-        self.annotation_file = os.path.join(self.data_dir, 'annotation_{}.json'.format(data_type))   #就是那两个train和test的json文件
+      
+        self.annotation_file = os.path.join(self.data_dir, 'annotation_{}.json'.format(data_type))  
         with open(self.annotation_file, 'r') as rf:
             self.annotations = json.load(rf)
 
@@ -22,23 +23,23 @@ class PreVisTranfsDataset(Dataset):
         return len(self.annotations)
 
     def __getitem__(self, idx):
-        annotation = self.annotations[idx]   #取出其中一个的信息
-        location = annotation['location']    #当前agent所处的位置
-        target = annotation['target']        #agent要寻找的目标
-        optimal_action = annotation['optimal_action']   #标准动作
+        annotation = self.annotations[idx]   
+        location = annotation['location']    
+        target = annotation['target']        
+        optimal_action = annotation['optimal_action']   
 
-        annotation_path = os.path.join(self.data_dir, 'data', '{}.npz'.format(location.replace('|','_')))  #这个位置看到的信息 
+        annotation_path = os.path.join(self.data_dir, 'data', '{}.npz'.format(location.replace('|','_')))  
         data = np.load(annotation_path)
 
         global_feature = data['resnet18_feature']
 
 
-        detect_feats = np.zeros([22, 264]) #0初始化
+        detect_feats = np.zeros([22, 264]) 
 
-        for cate_id in range(23):   #同类别检测结果抑制，即只取置信度最高的同类物体
-            cate_index = data['detr_feature'][:, 257] == cate_id   #cate_index是所有cate_id类别的物体标号
-            if cate_index.sum() > 0:                                   #如果有检测到这个物体
-                index = data['detr_feature'][cate_index, 256].argmax(0)    #取cate_id类中置信度最大的物体标号
+        for cate_id in range(23):   
+            cate_index = data['detr_feature'][:, 257] == cate_id   
+            if cate_index.sum() > 0:                                   
+                index = data['detr_feature'][cate_index, 256].argmax(0)    
                 detect_feats[cate_id - 1, :] = data['detr_feature'][cate_index, :][index]  
                 
 

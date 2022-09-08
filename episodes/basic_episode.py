@@ -96,7 +96,7 @@ class BasicEpisode(Episode):
         return self.environment.current_frame
 
     def current_detection_feature(self):
-        return self.environment.current_detection_feature   #返回当前时刻检测到的物体的视觉特征和检测框与label
+        return self.environment.current_detection_feature   
 
     # def current_cls_masks(self):
     #     return self.environment.current_cls_masks
@@ -169,11 +169,11 @@ class BasicEpisode(Episode):
         self.scene = scene
 
         if self._env is None:
-            self._env = Environment(        #初始化机器人所处环境
-                offline_data_dir=args.data_dir,     #数据文件路径
-                use_offline_controller=True,        #使用离线控制
-                grid_size=0.25,                     #每一步的大小
-                detection_feature_file_name=args.detection_feature_file_name,  #det_feature_22_cates.hdf5 
+            self._env = Environment(        
+                offline_data_dir=args.data_dir,     
+                use_offline_controller=True,       
+                grid_size=0.25,                     
+                detection_feature_file_name=args.detection_feature_file_name,  
                 images_file_name=args.images_file_name,
                 visible_object_map_file_name=args.visible_map_file_name,
                 local_executable_path=args.local_executable_path,

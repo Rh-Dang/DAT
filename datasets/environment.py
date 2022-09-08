@@ -6,7 +6,6 @@ import os
 import random
 from .offline_controller_with_small_rotation import OfflineControllerWithSmallRotation
 
-#包含agent所处环境的信息，即agent在当前环境检测到的信息
 class Environment:
     """ Abstraction of the ai2thor enviroment. """
 

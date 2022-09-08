@@ -17,7 +17,7 @@ class ThorAgent:
         self.scenes = scenes
         self.targets = targets
         self.targets_index = [i for i, item in enumerate(AI2THOR_TARGET_CLASSES[22]) if item in self.targets]  
-        #就是检测目标的索引 [0, 1, 2, ... ,21]
+
 
         self.gpu_id = gpu_id
 
@@ -25,7 +25,7 @@ class ThorAgent:
         self.model = model
         self._episode = episode
         self.eps_len = 0
-        self.nav_len = 0    #从看到物体到导航到物体的路径
+        self.nav_len = 0    
         self.values = []
         self.log_probs = []
         self.rewards = []
@@ -97,7 +97,7 @@ class ThorAgent:
 
     def eval_at_state(self, model_options):
         """ Eval at state. """
-        raise NotImplementedError()                 #NotImplementedError() ：强制子类实现这个接口，如果没有实现则输出错误
+        raise NotImplementedError()                 
 
     @property
     def episode(self):
@@ -137,7 +137,7 @@ class ThorAgent:
 
     def _increment_episode_length(self):
         self.eps_len += 1
-        if self.nav_graph.sum() != 0:  #表示看到物体了
+        if self.nav_graph.sum() != 0:  
             self.nav_len += 1
         if self.eps_len >= self.max_episode_length:
             if not self.done:
@@ -181,7 +181,7 @@ class ThorAgent:
             }
             self.episode.match_score.append(visual_info['match_score'])
 
-        # nav_graph 传递
+        # navigation graph
         self.nav_graph = out.nav_graph
         self.start_coord = out.start_coord
         self.coord_memory = out.coord_memory

@@ -38,9 +38,9 @@ def a3c_val(
     scenes,
 ):
 
-    targets = AI2THOR_TARGET_CLASSES[args.num_category]  #导入测试的物体目标类别
+    targets = AI2THOR_TARGET_CLASSES[args.num_category]  
 
-    if scene_type == "living_room":     #限制最大步数，卧室需要的步数更多一些
+    if scene_type == "living_room":     
         args.max_episode_length = 200
     else:
         args.max_episode_length = 100
@@ -68,7 +68,7 @@ def a3c_val(
 
     model_options = ModelOptions()
 
-    while count < max_count:   #一类场景跑250次
+    while count < max_count:   
 
         total_reward = 0
         player.eps_len = 0
@@ -76,11 +76,11 @@ def a3c_val(
         player_start_state = copy.deepcopy(player.environment.controller.state)
         player_start_time = time.time()
         actions = []
-        while not player.done:    #如果没有输出done（受到了路径最大步数的限制）就再跑一遍
+        while not player.done:   
             player.sync_with_shared(shared_model)
-            total_reward = run_episode(player, args, total_reward, model_options, False, shared_model)  #相当跑了一个路径 
+            total_reward = run_episode(player, args, total_reward, model_options, False, shared_model)   
             actions = copy.deepcopy([np.squeeze(k.cpu().numpy()).tolist() for k in player.actions])
-            if not player.done:     #如果没有主动输出done，给agent重置状态
+            if not player.done:     
                 reset_player(player)
 
         spl, best_path_length = compute_spl(player, player_start_state)
@@ -88,7 +88,7 @@ def a3c_val(
         # # sxz add
         record_actions = save_actions(actions, player.episode, spl, sne, scene_type, player_start_state)
         gl.app_value('records', record_actions)
-        # 计算前进比率
+       
         count_0=0
         if record_actions['success']:
             for action in record_actions['actions']:

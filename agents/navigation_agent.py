@@ -12,12 +12,12 @@ class NavigationAgent(ThorAgent):
     """ A navigation agent who learns with pretrained embeddings. """
 
     def __init__(self, create_model, args, rank, scenes, targets, gpu_id):
-        max_episode_length = args.max_episode_length   #最大的导航步长
+        max_episode_length = args.max_episode_length   
         hidden_state_sz = args.hidden_state_sz   
         self.action_space = args.action_space   
         from utils.class_finder import episode_class    
 
-        episode_constructor = episode_class(args.episode_type)   #从episodes文件夹中选取一个episode
+        episode_constructor = episode_class(args.episode_type)  
         episode = episode_constructor(args, gpu_id, args.strict_done)   
 
         super(NavigationAgent, self).__init__(
@@ -48,30 +48,9 @@ class NavigationAgent(ThorAgent):
         model_input.hidden = self.hidden
 
         model_input = self.process_detr_input(model_input)
-        # current_detection_feature = self.episode.current_detection_feature()
-        # current_detection_feature = current_detection_feature[self.targets_index, :]  #前512维度是视觉特征，后5维度是检测框和label
-        # target_embedding_array = np.zeros((len(self.targets), 1))
-        # target_embedding_array[self.targets.index(self.episode.target_object)] = 1
-
-        # self.episode.detection_results.append(
-        #     list(current_detection_feature[self.targets.index(self.episode.target_object), 512:]))
-        # # if self.episode.current_cls_masks() is None:
-        # current_cls_masks = np.zeros((22,7,7))
-        # # else:
-        # #     current_cls_masks = self.episode.current_cls_masks()[()]
-
-        # target_embedding = {'appear': current_detection_feature[:, :512],  
-        #                     'info': current_detection_feature[:, 512:],
-        #                     'indicator': target_embedding_array,
-        #                     'masks':current_cls_masks}
-        # target_embedding['appear'] = toFloatTensor(target_embedding['appear'], self.gpu_id)
-        # target_embedding['info'] = toFloatTensor(target_embedding['info'], self.gpu_id)
-        # target_embedding['indicator'] = toFloatTensor(target_embedding['indicator'], self.gpu_id)
-        # target_embedding['masks'] = toFloatTensor(target_embedding['masks'], self.gpu_id)
-        # model_input.target_class_embedding = target_embedding
 
         model_input.start_coord = self.start_coord
-        model_input.coord = self.episode.environment.controller.state    #坐标 + 朝向 + 俯仰角
+        model_input.coord = self.episode.environment.controller.state    
         model_input.nav_graph = self.nav_graph
         model_input.coord_memory = self.coord_memory
         model_input.action_probs = self.last_action_probs
@@ -113,28 +92,18 @@ class NavigationAgent(ThorAgent):
 
     def process_detr_input(self, model_input):
         # process detection features from DETR detector
-        current_detection_feature = self.episode.current_detection_feature() #取出数据
-        # print('current_detection_feature:')
-        # print(current_detection_feature.shape)
-        # np.savetxt('visualization_files/current_detection_feature .txt',current_detection_feature )
-        # np.savetxt('visualization_files/current_detection_feature_label.txt',current_detection_feature[:, 257])
-        zero_detect_feats = np.zeros([22, 264]) #0初始化
+        current_detection_feature = self.episode.current_detection_feature() 
+        zero_detect_feats = np.zeros([22, 264]) 
 
         
-        for cate_id in range(len(self.targets) + 1):   #同类别检测结果抑制，即只取置信度最高的同类物体
-            cate_index = current_detection_feature[:, 257] == cate_id   #cate_index是所有cate_id类别的物体标号
-            if cate_index.sum() > 0:                                   #如果有检测到这个物体
-                index = current_detection_feature[cate_index, 256].argmax(0)    #取cate_id类中置信度最大的物体标号
+        for cate_id in range(len(self.targets) + 1):   
+            cate_index = current_detection_feature[:, 257] == cate_id   
+            if cate_index.sum() > 0:                                   
+                index = current_detection_feature[cate_index, 256].argmax(0)   
                 zero_detect_feats[cate_id - 1, :] = current_detection_feature[cate_index, :][index]  
                 
         current_detection_feature = zero_detect_feats
-        # np.savetxt('visualization_files/zero_detect_feats.txt',current_detection_feature)
-        # np.savetxt('visualization_files/zero_detect_feats_label.txt',current_detection_feature[:, 257] )
 
-        # print('current_detection_feature2:')
-        # print(current_detection_feature.shape)
-
-        #self.targets就是一个包含所有物体名称的数组
         detection_inputs = {
             'features': current_detection_feature[:, :256],
             'scores': current_detection_feature[:, 256],
@@ -147,8 +116,7 @@ class NavigationAgent(ThorAgent):
         target_embedding_array = np.zeros((detection_inputs['features'].shape[0], 1))
         target_embedding_array[
             detection_inputs['labels'][:] == (self.targets.index(self.episode.target_object) + 1)] = 1
-        detection_inputs['indicator'] = target_embedding_array #如果检测到的是目标物体，就在indicator位置1
-
+        detection_inputs['indicator'] = target_embedding_array 
         detection_inputs = self.dict_toFloatTensor(detection_inputs)
 
         model_input.target_class_embedding = detection_inputs 
@@ -182,7 +150,7 @@ class NavigationAgent(ThorAgent):
         #self.model.reset()
 
     def repackage_hidden(self):
-        if self.hidden != None:                             #如果不用LSTM就用不上这个了
+        if self.hidden != None:                             
             self.hidden = (self.hidden[0].detach(), self.hidden[1].detach())
         self.last_action_probs = self.last_action_probs.detach()
 

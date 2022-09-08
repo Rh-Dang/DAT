@@ -63,13 +63,10 @@ def full_eval(args=None):
 
         log_writer.add_scalar("val/success", results["success"], train_ep)
         log_writer.add_scalar("val/spl", results["spl"], train_ep)
-    # best models
-    # HOZ_38909040_3300000_2021_09_16_15_12_10.dat
-    # TPNHOZ_29208145_2500000_2021_09_16_15_12_33.dat
+
     args.test_or_val = "test"
-    args.load_model = best_model_on_val    #比较文件夹中所有模型，挑出测试集上表现最好的模型
-    #args.load_model = "./trained_models/HOZ_38909040_3300000_2021_09_16_15_12_10.dat"
-    #args.load_model = "./trained_models/TPNHOZ_29208145_2500000_2021_09_16_15_12_33.dat"
+    args.load_model = best_model_on_val    
+
     main_eval(args, create_shared_model, init_agent)
 
     with open(args.results_json, "r") as f:

@@ -56,7 +56,7 @@ def run_episode(player, args, total_reward, model_options, training, shared_mode
     update_test = True in update_test_type.values()
 
     for _ in range(num_steps):
-        player.action(model_options, training, update_test)    #在测试环境中跑一步
+        player.action(model_options, training, update_test)    
 
         if update_test_type['meta_learning']:
             current_state = str(player.episode.environment.controller.state)
@@ -330,7 +330,7 @@ def compute_sne(player):
     if not player.success:
         return 0
     else:
-        return player.eps_len/(player.nav_len+1)   #+1是为了防止除以0
+        return player.eps_len/(player.nav_len+1)   
 
 
 def action_prob_detection(bbox):

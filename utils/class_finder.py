@@ -4,12 +4,12 @@ import episodes
 import optimizers
 import argparse
 
-def model_class(class_name):       #从models文件夹下面选择模型
+def model_class(class_name):       
     if class_name not in models.__all__:
        raise argparse.ArgumentTypeError("Invalid model {}; choices: {}".format(
            class_name, models.__all__))
-    return getattr(models, class_name)   #getattr是获取对象中的属性  
-def agent_class(class_name):       #从agents文件夹下选择下选择一个agent
+    return getattr(models, class_name)    
+def agent_class(class_name):       
     if class_name not in agents.__all__:
        raise argparse.ArgumentTypeError("Invalid agent {}; choices: {}".format(
            class_name, agents.__all__))

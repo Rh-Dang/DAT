@@ -65,7 +65,7 @@ def evaluate(
     criterion.eval()
 
     metric_logger = utils.MetricLogger(delimiter="  ")
-    metric_logger.add_meter('class_error', utils.SmoothedValue(window_size=1, fmt='{value:.2f}'))  #一种可视化的logger方法
+    metric_logger.add_meter('class_error', utils.SmoothedValue(window_size=1, fmt='{value:.2f}'))  
     header = 'Test:'
 
     total = 0

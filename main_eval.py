@@ -50,13 +50,13 @@ def main_eval(args, create_shared_model, init_agent):
             args=(
                 rank,
                 args,
-                model_to_open,   #加载的训练后权重
+                model_to_open,   
                 create_shared_model,
                 init_agent,
                 res_queue,
                 250,
                 scene_type,
-                scenes[rank],   #每一个场景取的10个floorplan
+                scenes[rank],  
             ),
         )
         p.start()
@@ -94,15 +94,6 @@ def main_eval(args, create_shared_model, init_agent):
     with open(args.results_json, "w") as fp:
         json.dump(tracked_means, fp, sort_keys=True, indent=4)
  
-    # byb add
-    # with open(args.results_json, "r") as f:
-    #     results = json.load(f)
-    # if results["success"] > 0.60:
-    #     present_model_dict={'model': args.present_model,'rank':rank}
-    #     with open('./sp_test/location_result_{}'.format(results["success"]), "w") as fp:
-    #         json.dump(tracked_means, fp, sort_keys=True, indent=4)
-    #         json.dump(present_model_dict,fp)
-   
     visualization_dir = './visualization_files'
     if not os.path.exists(visualization_dir):
         os.mkdir(visualization_dir)
