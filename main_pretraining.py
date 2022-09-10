@@ -1,5 +1,6 @@
 """ Borrowed from https://github.com/xiaobaishu0097/ICLR_VTNet/blob/main/main_pretraining.py."""
 import os
+root_path = os.path.split(os.path.realpath('__file__'))[0]         
 import datetime
 import random
 import ctypes
@@ -27,7 +28,7 @@ def main():
     args = command_parser.parse_arguments()
     #init_distributed_mode(args)                   
 
-    args.data_dir = '/data_sdd/datadrh/HOZ/data/AI2Thor_VisTrans_Pretrain_Data/'  
+    args.data_dir ='./data/AI2Thor_VisTrans_Pretrain_Data/'  
 
     print(args)
 
