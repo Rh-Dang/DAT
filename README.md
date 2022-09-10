@@ -38,7 +38,7 @@ data/
 
 ### Pre-train the search thinking network of our DAT model
 
-`python main_pretraining.py --title DAT_Pretrain --model DAT_Pretrain --workers 9 --gpu-ids 0 --epochs 20 --log-dir runs/pretrain --save-model-dir trained_models/pretrain`
+`python main_pretraining.py --title ST_Pretrain --model ST_Pretrain --workers 9 --gpu-ids 0 --epochs 20 --log-dir runs/pretrain --save-model-dir trained_models/pretrain`
 ### Train our DAT model
 `python main.py --title DAT --model DAT --workers 9 --gpu-ids 0 --max-ep 3000000 --log-dir runs/RL_train --save-model-dir trained_models/RL_train --pretrained-trans trained_models/pretrain/checkpoint0004.pth` 
 ### Evaluate our DAT model

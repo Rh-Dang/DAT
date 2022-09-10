@@ -1,6 +1,5 @@
 """ Borrowed from https://github.com/xiaobaishu0097/ICLR_VTNet/blob/main/main_pretraining.py."""
-import os
-root_path = os.path.split(os.path.realpath('__file__'))[0]         
+import os      
 import datetime
 import random
 import ctypes
@@ -46,9 +45,6 @@ def main():
     log_file = os.path.join(log_dir, 'pretrain.txt')   
     sys.stdout = Logger(log_file, sys.stdout)
     sys.stderr = Logger(log_file, sys.stderr)
-
-    # tb_log_dir = os.path.join(args.work_dir, 'runs', '{}_{}_{}'.format(args.title, args.phase, start_time_str))
-    # log_writer = SummaryWriter(log_dir=tb_log_dir)
 
     if not os.path.exists(args.save_model_dir):    
         os.makedirs(args.save_model_dir)

@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import torchvision.models as models
 from utils.model_util import norm_col_init, weights_init
 
-from model_io import ModelOutput
+from .model_io import ModelOutput
 
 import scipy.sparse as sp
 import numpy as np
